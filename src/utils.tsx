@@ -9,3 +9,7 @@ export const calculatePercentage = (
 ): number => {
   return total > 0 ? parseFloat(((value / total) * 100).toFixed(precision)) : 0;
 };
+
+export const sleep = (ms = 0) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};

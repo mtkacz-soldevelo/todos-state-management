@@ -1,5 +1,5 @@
 import { useReducer, Reducer, useMemo, useCallback, useEffect } from 'react';
-import { calculatePercentage, generateUniqueId } from '../utils';
+import { calculatePercentage, generateUniqueId, sleep } from '../utils';
 import { Todo } from './todos.model';
 
 type SortOrder = 'asc' | 'desc';
@@ -68,7 +68,6 @@ const todosReducer: TodosReducer = (state, action) => {
 
       return {
         ...state,
-        text: '',
         todos: [
           ...state.todos,
           {
@@ -108,13 +107,13 @@ const todosReducer: TodosReducer = (state, action) => {
     case 'set-search-filter': {
       return {
         ...state,
-        searchFilter: action.payload.searchFilter,
+        ...action.payload,
       };
     }
     case 'set-sort-order': {
       return {
         ...state,
-        sortOrder: action.payload.sortOrder,
+        ...action.payload,
       };
     }
     default: {
@@ -157,7 +156,9 @@ export function useTodosSource() {
   }, [todos, searchFilter, sortOrder, isInitalized]);
 
   useEffect(() => {
-    const loadState = () => {
+    const loadState = async () => {
+      await sleep();
+
       const state = readLocalStorage(STORAGE_KEY);
       const parsedState = state ? JSON.parse(state) : null;
       dispatch({ type: 'load-todos', payload: parsedState });
@@ -198,22 +199,30 @@ export function useTodosSource() {
     };
   }, [sortedTodos]);
 
-  const createTodo = useCallback((text: string) => {
+  const createTodo = useCallback(async (text: string) => {
+    await sleep();
+
     dispatch({ type: 'create-todo', payload: { text } });
   }, []);
 
-  const removeTodo = useCallback((todoId: Todo['id']) => {
+  const removeTodo = useCallback(async (todoId: Todo['id']) => {
+    await sleep();
+
     dispatch({ type: 'remove-todo', payload: { todoId } });
   }, []);
 
   const updateTodo = useCallback(
-    (todoId: Todo['id'], updates: Partial<Omit<Todo, 'id'>>) => {
+    async (todoId: Todo['id'], updates: Partial<Omit<Todo, 'id'>>) => {
+      await sleep();
+
       dispatch({ type: 'update-todo', payload: { todoId, updates } });
     },
     []
   );
 
-  const toggleTodo = useCallback((todoId: Todo['id']) => {
+  const toggleTodo = useCallback(async (todoId: Todo['id']) => {
+    await sleep();
+
     dispatch({ type: 'toggle-todo', payload: { todoId } });
   }, []);
 
@@ -236,5 +245,6 @@ export function useTodosSource() {
     toggleTodo,
     setSortOrder,
     setSearchFilter,
+    isInitalized,
   };
 }

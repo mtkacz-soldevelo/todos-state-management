@@ -2,6 +2,12 @@ import { useState } from 'react';
 import { TodosProvider, useTodos, type Todo } from './todos';
 
 function TodosPage() {
+  const { isInitalized } = useTodos();
+
+  if (!isInitalized) {
+    return <TodosLoading />;
+  }
+
   return (
     <div>
       <TodosHeader />
@@ -12,6 +18,10 @@ function TodosPage() {
       <TodosList />
     </div>
   );
+}
+
+function TodosLoading() {
+  return <h1>Initializing...</h1>;
 }
 
 function TodosHeader() {
@@ -79,7 +89,14 @@ function TodoForm() {
         onChange={(e) => setText(e.target.value)}
         value={text}
       />
-      <button onClick={() => createTodo(text)}>Create</button>
+      <button
+        onClick={async () => {
+          await createTodo(text);
+          setText('');
+        }}
+      >
+        Create
+      </button>
     </div>
   );
 }
@@ -100,7 +117,9 @@ function TodosList() {
 
 function TodoItem({ todo }: { todo: Todo }) {
   const { toggleTodo, removeTodo, updateTodo } = useTodos();
+
   const [mode, setMode] = useState<'read' | 'write'>('read');
+  const [text, setText] = useState(todo.text);
 
   const content: Record<typeof mode, JSX.Element> = {
     read: (
@@ -112,10 +131,17 @@ function TodoItem({ todo }: { todo: Todo }) {
       <span>
         <input
           type="text"
-          value={todo.text}
-          onChange={(e) => updateTodo(todo.id, { text: e.target.value })}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
         />
-        <button onClick={() => setMode('read')}>Confirm</button>
+        <button
+          onClick={async () => {
+            await updateTodo(todo.id, { text });
+            setMode('read');
+          }}
+        >
+          Confirm
+        </button>
         <button onClick={() => removeTodo(todo.id)}>Remove</button>
       </span>
     ),
@@ -126,7 +152,7 @@ function TodoItem({ todo }: { todo: Todo }) {
       <input
         type="checkbox"
         checked={todo.done}
-        onChange={() => toggleTodo(todo.id)}
+        onChange={async () => await toggleTodo(todo.id)}
       />
       {content[mode]}
     </span>
