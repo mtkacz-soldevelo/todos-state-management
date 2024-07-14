@@ -1,5 +1,5 @@
 import { useReducer, Reducer, useMemo, useCallback, useEffect } from 'react';
-import { calculatePercentage, generateUniqueId, sleep } from '../utils';
+import { calculatePercentage, generateUniqueId, sleep } from '../../utils';
 import { Todo } from './todos.model';
 
 type SortOrder = 'asc' | 'desc';
