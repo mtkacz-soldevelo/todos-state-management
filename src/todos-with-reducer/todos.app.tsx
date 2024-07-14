@@ -25,7 +25,7 @@ function TodosLoading() {
 }
 
 function TodosHeader() {
-  return <h1>My Todos</h1>;
+  return <h1>My Todos with Reducer</h1>;
 }
 
 function TodosStats() {

@@ -124,7 +124,7 @@ const todosReducer: TodosReducer = (state, action) => {
   }
 };
 
-const STORAGE_KEY = 'my-todos';
+const STORAGE_KEY = 'my-todos-with-reducer';
 
 export function useTodosSource() {
   const [{ todos, searchFilter, sortOrder, isInitalized }, dispatch] =
