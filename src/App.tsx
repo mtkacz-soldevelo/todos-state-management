@@ -1,7 +1,7 @@
-import { TodosWithContext } from './todos-with-context';
+import { TodosWithReducer } from './todos-with-reducer';
 
 function App() {
-  return <TodosWithContext />;
+  return <TodosWithReducer />;
 }
 
 export default App;

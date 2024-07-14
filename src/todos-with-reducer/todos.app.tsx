@@ -159,7 +159,7 @@ function TodoItem({ todo }: { todo: Todo }) {
   );
 }
 
-export function TodosWithContext() {
+export function TodosWithReducer() {
   return (
     <TodosProvider>
       <TodosPage />
