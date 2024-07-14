@@ -1,6 +1,7 @@
 import { useReducer, Reducer, useMemo, useCallback, useEffect } from 'react';
-import { calculatePercentage, generateUniqueId, sleep } from '../../utils';
+import { AsyncUtils, MathUtils, EntityUtils } from '../../utils';
 import { Todo } from './todos.model';
+import { LocalStorageService } from '../../services';
 
 type SortOrder = 'asc' | 'desc';
 
@@ -71,7 +72,7 @@ const todosReducer: TodosReducer = (state, action) => {
         todos: [
           ...state.todos,
           {
-            id: generateUniqueId(),
+            id: EntityUtils.generateUniqueId(),
             text: action.payload.text.trim(),
             done: false,
           },
@@ -123,14 +124,6 @@ const todosReducer: TodosReducer = (state, action) => {
   }
 };
 
-const readLocalStorage = (key: string) => {
-  return localStorage.getItem(key);
-};
-
-const writeLocalStorage = (key: string, value: string) => {
-  localStorage.setItem(key, value);
-};
-
 const STORAGE_KEY = 'my-todos';
 
 export function useTodosSource() {
@@ -144,7 +137,7 @@ export function useTodosSource() {
 
   useEffect(() => {
     const saveState = () => {
-      writeLocalStorage(
+      LocalStorageService.writeLocalStorage(
         STORAGE_KEY,
         JSON.stringify({ todos, searchFilter, sortOrder })
       );
@@ -157,9 +150,9 @@ export function useTodosSource() {
 
   useEffect(() => {
     const loadState = async () => {
-      await sleep();
+      await AsyncUtils.sleep();
 
-      const state = readLocalStorage(STORAGE_KEY);
+      const state = LocalStorageService.readLocalStorage(STORAGE_KEY);
       const parsedState = state ? JSON.parse(state) : null;
       dispatch({ type: 'load-todos', payload: parsedState });
     };
@@ -189,7 +182,7 @@ export function useTodosSource() {
     const done = sortedTodos.filter((todo) => todo.done).length;
     const notDone = total - done;
 
-    const donePercentage = calculatePercentage(done, total);
+    const donePercentage = MathUtils.calculatePercentage(done, total);
     const notDonePercentage = 100 - donePercentage;
 
     return {
@@ -200,20 +193,20 @@ export function useTodosSource() {
   }, [sortedTodos]);
 
   const createTodo = useCallback(async (text: string) => {
-    await sleep();
+    await AsyncUtils.sleep();
 
     dispatch({ type: 'create-todo', payload: { text } });
   }, []);
 
   const removeTodo = useCallback(async (todoId: Todo['id']) => {
-    await sleep();
+    await AsyncUtils.sleep();
 
     dispatch({ type: 'remove-todo', payload: { todoId } });
   }, []);
 
   const updateTodo = useCallback(
     async (todoId: Todo['id'], updates: Partial<Omit<Todo, 'id'>>) => {
-      await sleep();
+      await AsyncUtils.sleep();
 
       dispatch({ type: 'update-todo', payload: { todoId, updates } });
     },
@@ -221,7 +214,7 @@ export function useTodosSource() {
   );
 
   const toggleTodo = useCallback(async (todoId: Todo['id']) => {
-    await sleep();
+    await AsyncUtils.sleep();
 
     dispatch({ type: 'toggle-todo', payload: { todoId } });
   }, []);
