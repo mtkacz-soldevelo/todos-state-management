@@ -177,9 +177,9 @@ export function useTodosSource() {
   );
 
   const stats = useMemo(() => {
-    const total = sortedTodos.length;
+    const total = filteredTodos.length;
 
-    const done = sortedTodos.filter((todo) => todo.done).length;
+    const done = filteredTodos.filter((todo) => todo.done).length;
     const notDone = total - done;
 
     const donePercentage = MathUtils.calculatePercentage(done, total);
@@ -190,7 +190,7 @@ export function useTodosSource() {
       done: { value: done, percentage: donePercentage },
       notDone: { value: notDone, percentage: notDonePercentage },
     };
-  }, [sortedTodos]);
+  }, [filteredTodos]);
 
   const createTodo = useCallback(async (text: string) => {
     await AsyncUtils.sleep();
