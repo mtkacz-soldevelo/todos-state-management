@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { Todo } from './todos.model';
-import { AsyncUtils, EntityUtils, MathUtils } from '../../utils';
+import { AsyncUtils, EntityUtils, MathUtils } from '../utils';
 import { persist } from 'zustand/middleware';
 
 type SortOrder = 'asc' | 'desc';

@@ -1,7 +1,7 @@
 import { useReducer, Reducer, useMemo, useCallback, useEffect } from 'react';
-import { AsyncUtils, MathUtils, EntityUtils } from '../../utils';
+import { AsyncUtils, MathUtils, EntityUtils } from '../utils';
 import { Todo } from './todos.model';
-import { LocalStorageService } from '../../services';
+import { LocalStorageService } from '../services';
 
 type SortOrder = 'asc' | 'desc';
 

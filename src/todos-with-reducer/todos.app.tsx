@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { TodosProvider, useTodos, type Todo } from './components';
+import { TodosProvider, useTodos } from './todos.provider';
+import { type Todo } from './todos.model';
 
 function TodosPage() {
   const { isInitalized } = useTodos();

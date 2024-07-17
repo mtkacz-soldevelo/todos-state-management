@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useTodosStore, type Todo } from './components';
+import { useTodosStore } from './todos.store';
+import { type Todo } from './todos.model';
 
 function TodosPage() {
   return (
